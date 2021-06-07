@@ -35,8 +35,8 @@
    password = ''
 
    public submit(): void {
-     // let url = 'http://localhost:8080/login'
-     let url = 'http://localhost:8080/bluelog/login'
+     let url = 'http://localhost:5000/login'
+     // let url = 'http://localhost:8080/bluelog/login'
      axios.post(url, {
        username: this.username,
        passhash: Md5.hashStr(this.password),

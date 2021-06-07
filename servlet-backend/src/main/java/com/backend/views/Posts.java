@@ -24,7 +24,7 @@ public class Posts extends HttpServlet {
         PrintWriter writer = response.getWriter();
 
         HttpSession session = request.getSession();
-        String username = (String)session.getAttribute("curuser");
+        String username = request.getParameter("username");
         // TODO query from table `Post`, which author == username, return it as posts: List<Post>
         Result<List<Post>, Exception> queryResult = Post.queryWithAuthor(username);
 

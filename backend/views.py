@@ -28,8 +28,8 @@ def login():
 # MODULE for user view
 @app.route('/posts', methods=['POST'])
 def posts():
-    # username = request.json.get('username')
-    username = session.get('curuser')
+    username = request.json.get('username')
+    # username = session.get('curuser')
     return jsonify({
         'status': 'get post success',
         'posts': list(map(lambda x: x.serialize(), Post.query.filter(Post.author == username).all())),
