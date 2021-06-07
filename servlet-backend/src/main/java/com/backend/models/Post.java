@@ -1,6 +1,7 @@
 package com.backend.models;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.backend.utils.Result;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -56,14 +57,15 @@ public class Post {
         this.content = content;
     }
 
-    public static List<Post> queryWithAuthor(String author) {
+    public static Result<List<Post>, Exception> queryWithAuthor(String author) {
         Connection conn = null;
         Statement stmt = null;
-        List<Post> result = new LinkedList<>();
+        List<Post> posts = new LinkedList<>();
+        Result<List<Post>, Exception> result = new Result<>(null, null);
 
         try {
             Class.forName(JDBC_DRIVER);
-            conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+            conn = DriverManager.getConnection(DB_URL, connInfo);
             // TODO 执行查询
             stmt = conn.createStatement();
             String querySQL = String.format("select * from %s where author = \'%s\'", POST_TABLE, author);
@@ -74,21 +76,24 @@ public class Post {
                 String _title = resultSet.getString("title");
                 String _author = resultSet.getString("author");
                 String _content = resultSet.getString("content");
-                result.add(new Post(postid, _title, _author, _content));
+                posts.add(new Post(postid, _title, _author, _content));
             }
 
             resultSet.close();
             stmt.close();
             conn.close();
 
+            result.left = posts;
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
+            result.right = sqlException;
         } catch (Exception exception) {
             exception.printStackTrace();
+            result.right = exception;
         } finally {
-
+            return result;
         }
 
-        return result;
+
     }
 }

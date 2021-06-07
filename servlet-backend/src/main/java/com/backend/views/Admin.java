@@ -1,7 +1,9 @@
 package com.backend.views;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.backend.models.User;
+import com.backend.utils.Result;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,7 +14,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-@WebServlet(urlPatterns = "/bluelog/admin")
+@WebServlet(urlPatterns = {"/bluelog/admin"})
 public class Admin extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -20,7 +22,18 @@ public class Admin extends HttpServlet {
         response.setContentType("application/json; charset=utf-8");
         PrintWriter writer = response.getWriter();
 
-        List<User> users = User.queryIfNotAdmin();
-        writer.write(JSON.toJSONString(users));
+        Result<List<User>, Exception> queryResult = User.queryIfNotAdmin();
+        JSONObject result = new JSONObject();
+
+        if(queryResult.isOk()) {
+            result.put("status", "get users success");
+            result.put("users", queryResult.left);
+        } else if(queryResult.isErr()) {
+            response.setStatus(400);
+            result.put("status", "get users failed");
+            result.put("error", queryResult.right.getMessage());
+        }
+
+        writer.write(result.toString());
     }
 }

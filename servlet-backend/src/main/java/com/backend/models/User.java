@@ -1,5 +1,6 @@
 package com.backend.models;
 import com.alibaba.fastjson.annotation.JSONField;
+import com.backend.utils.Result;
 
 import java.sql.*;
 import java.util.LinkedList;
@@ -16,50 +17,52 @@ public class User {
     @JSONField(name = "passhash")
     String passhash;
 
-    public static List<User> queryWithPasshash(String name, boolean isadmin, String passhash) {
+    public static Result<List<User>, Exception> queryWithPasshash(String name, boolean isadmin, String passhash){
         Connection conn = null;
         Statement stmt = null;
-        List<User> result = new LinkedList<>();
+        List<User> users = new LinkedList<>();
+        Result<List<User>, Exception> result = new Result<>(null, null);
 
         try {
             Class.forName(JDBC_DRIVER);
-            conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+            conn = DriverManager.getConnection(DB_URL, connInfo);
             // TODO 执行查询
             stmt = conn.createStatement();
-            String querySQL = String.format("select * from %s where name = \'%s\' and passhash = \'%s\' and isadmin = %s", USER_TABLE, name, passhash, isadmin);
+            String querySQL = String.format("select * from %s where name = '%s' and passhash = '%s' and isadmin = %s", USER_TABLE, name, passhash, isadmin);
             ResultSet resultSet = stmt.executeQuery(querySQL);
 
             while (resultSet.next()) {
                 int userid = resultSet.getInt("userid");
                 String _name = resultSet.getString("name");
-                boolean _isadmin  = resultSet.getBoolean("isadmin");
                 String _passhash = resultSet.getString("passhash");
-                result.add(new User(userid, _name, _isadmin, _passhash));
+                boolean _isadmin  = resultSet.getBoolean("isadmin");
+                users.add(new User(userid, _name, _isadmin, _passhash));
             }
 
             resultSet.close();
             stmt.close();
             conn.close();
 
+            result.left = users;
         } catch (SQLException sqlException) {
-            sqlException.printStackTrace();
+            result.right = sqlException;
         } catch (Exception exception) {
-            exception.printStackTrace();
+            result.right = exception;
         } finally {
-
+            return result;
         }
 
-        return result;
     }
 
-    public static List<User> queryIfNotAdmin() {
+    public static Result<List<User>, Exception> queryIfNotAdmin() {
         Connection conn = null;
         Statement stmt = null;
-        List<User> result = new LinkedList<>();
+        List<User> users = new LinkedList<>();
+        Result<List<User>, Exception> result = new Result<>(null, null);
 
         try {
             Class.forName(JDBC_DRIVER);
-            conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+            conn = DriverManager.getConnection(DB_URL, connInfo);
             // TODO 执行查询
             stmt = conn.createStatement();
             String querySQL = String.format("select * from %s where isadmin = %s", USER_TABLE, false);
@@ -70,22 +73,22 @@ public class User {
                 String _name = resultSet.getString("name");
                 boolean _isadmin  = resultSet.getBoolean("isadmin");
                 String _passhash = resultSet.getString("passhash");
-                result.add(new User(userid, _name, _isadmin, _passhash));
+                users.add(new User(userid, _name, _isadmin, _passhash));
             }
 
             resultSet.close();
             stmt.close();
             conn.close();
 
+            result.left = users;
         } catch (SQLException sqlException) {
-            sqlException.printStackTrace();
+            result.right = sqlException;
         } catch (Exception exception) {
-            exception.printStackTrace();
+            result.right = exception;
         } finally {
-
+            return result;
         }
 
-        return result;
     }
 
     public int getUserid() {

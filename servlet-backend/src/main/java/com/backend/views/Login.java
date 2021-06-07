@@ -2,6 +2,7 @@ package com.backend.views;
 
 import com.alibaba.fastjson.JSONObject;
 import com.backend.models.User;
+import com.backend.utils.Result;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,7 +16,7 @@ import java.util.List;
 
 import static com.backend.utils.inputStream2String.transform;
 
-@WebServlet(urlPatterns = "/bluelog/login")
+@WebServlet(urlPatterns = {"/bluelog/login"})
 public class Login extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -30,8 +31,8 @@ public class Login extends HttpServlet {
         String usertype = jsonObject.getString("usertype");
         String passhash = jsonObject.getString("passhash");
 
-        List<User> matchedUser = User.queryWithPasshash(username, usertype.equals("admin"), passhash);
-        if(!matchedUser.isEmpty()) {
+        Result<List<User>, Exception> queryResult = User.queryWithPasshash(username, usertype.equals("admin"), passhash);
+        if(queryResult.isOk()) {
             HttpSession session = request.getSession();
             session.setAttribute("curuser", username);
             session.setAttribute("usertype", usertype);
@@ -41,15 +42,14 @@ public class Login extends HttpServlet {
 
             writer.write(result.toString());
 
-        } else {
+        } else if(queryResult.isErr()){
             // TODO return 400
             response.setStatus(400);
             JSONObject result = new JSONObject();
             result.put("status", "login failed");
-            result.put("error", "no such user or password incorrect");
+            result.put("error", queryResult.right.getMessage());
 
             writer.write(result.toString());
-
         }
     }
 }

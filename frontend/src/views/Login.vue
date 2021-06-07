@@ -59,8 +59,8 @@
 	 })
        }
      }).catch(errorResponse => {
-       // alert(errorResponse.response.data.description)
-       alert(errorResponse)
+       alert(errorResponse.response.data.error)
+       console.log(errorResponse.response.data)
        this.password = ''
      })
    }

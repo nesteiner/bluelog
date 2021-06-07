@@ -11,7 +11,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet(urlPatterns = "/bluelog/session/curuser")
+@WebServlet(urlPatterns = {"/bluelog/session/curuser"})
 public class CurrentUser extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -21,9 +21,11 @@ public class CurrentUser extends HttpServlet {
 
         HttpSession session = request.getSession();
         String username = (String)session.getAttribute("curuser");
+        String usertype = (String)session.getAttribute("usetype");
+
         JSONObject result = new JSONObject();
         result.put("curuser", username);
-        result.put("isadmin", session.getAttribute("usertype").equals("admin"));
+        result.put("isadmin", usertype == null ? false : (usertype.equals("admin")));
 
         writer.write(result.toString());
     }

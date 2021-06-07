@@ -30,16 +30,11 @@
  })
  export default class UserView extends Vue {
    posts : postItem[] = []
-   username ?: string
    
    created(): void {
-     this.username = this.$route.params.username as string
 
-     // TODO ajax to get the posts
-     let url = 'http://localhost:5000/posts'
+     let url = 'http://localhost:8080/bluelog/posts'
      axios.post(url, {
-	 username: this.username
-     }, {
        withCredentials: true
      }).then(response => {
        this.posts = response.data.posts
