@@ -15,18 +15,16 @@ import java.io.PrintWriter;
 public class CurrentUser extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("application/json; charset=utf-8");
         PrintWriter writer = response.getWriter();
 
         HttpSession session = request.getSession();
         String username = (String)session.getAttribute("curuser");
-        String usertype = (String)session.getAttribute("usetype");
+        String usertype = (String)session.getAttribute("usertype");
 
         JSONObject result = new JSONObject();
         result.put("curuser", username);
-        result.put("isadmin", usertype == null ? false : (usertype.equals("admin")));
-
+        result.put("isadmin", "admin".equals(usertype));
+        result.put("usertype", usertype == null ? "null" : usertype);
         writer.write(result.toString());
     }
 }

@@ -16,10 +16,13 @@ public class CORSFilter implements Filter {
 
         // Authorize (allow) all domains to consume the content
         HttpServletResponse response = (HttpServletResponse) servletResponse;
-        response.setHeader("Access-Control-Allow-Origin", "http://localhost:8081, http://127.0.0.1:8081");
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:8081");
         response.setHeader("Access-Control-Allow-Methods","GET, OPTIONS, HEAD, PUT, POST");
         response.setHeader("Access-Control-Allow-Credentials","true");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=utf-8");
+
         // pass the request along the filter chain
         chain.doFilter(request, response);
     }

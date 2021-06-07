@@ -18,10 +18,7 @@ import java.util.List;
 public class Admin extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("application/json; charset=utf-8");
         PrintWriter writer = response.getWriter();
-
         Result<List<User>, Exception> queryResult = User.queryIfNotAdmin();
         JSONObject result = new JSONObject();
 

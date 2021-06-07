@@ -17,6 +17,7 @@
  export default class Navi extends Vue {
    @Prop()
    username !: string
+
  }
 
 </script>

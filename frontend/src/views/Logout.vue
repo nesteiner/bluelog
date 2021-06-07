@@ -12,8 +12,8 @@
    mounted(): void {
      this.$emit('logout')
      // just use axios to the url, and redirect to '/'
-     let url = 'http://localhost:5000/logout'
-     // let url = 'http://localhost:8080/bluelog/logout'
+     // let url = 'http://localhost:5000/logout'
+     let url = 'http://localhost:8080/bluelog/logout'
 
      axios.get(url, {
        withCredentials: true

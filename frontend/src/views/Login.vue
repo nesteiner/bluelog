@@ -35,8 +35,8 @@
    password = ''
 
    public submit(): void {
-     let url = 'http://localhost:5000/login'
-     // let url = 'http://localhost:8080/bluelog/login'
+     // let url = 'http://localhost:5000/login'
+     let url = 'http://localhost:8080/bluelog/login'
      axios.post(url, {
        username: this.username,
        passhash: Md5.hashStr(this.password),
@@ -44,6 +44,9 @@
      }, {
        withCredentials: true
      }).then(response => {
+       // STUB
+       console.log('in Login.vue \n', response.data)
+
        this.$emit('login', this.username)
        // UserView 重定向 与 AdminView 重定向
        if(this.usertype == 'admin') {

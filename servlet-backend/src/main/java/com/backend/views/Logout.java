@@ -15,8 +15,6 @@ import java.io.PrintWriter;
 public class Logout extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("application/json; charset=utf-8");
         PrintWriter writer = response.getWriter();
 
         HttpSession session = request.getSession();

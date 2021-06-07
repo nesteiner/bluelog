@@ -27,8 +27,8 @@
 
    created(): void {
      // TODO init the users
-     let url = 'http://localhost:5000/admin'
-     // let url = 'http://localhost:8080/bluelog/admin'
+     // let url = 'http://localhost:5000/admin'
+     let url = 'http://localhost:8080/bluelog/admin'
      axios.post(url, {
      }, {
        withCredentials: true

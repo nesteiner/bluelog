@@ -32,15 +32,16 @@
    posts : postItem[] = []
    
    created(): void {
-     let url = 'http://localhost:5000/posts'
-     // let url = 'http://localhost:8080/bluelog/posts'
+     // let url = 'http://localhost:5000/posts'
+     let url = 'http://localhost:8080/bluelog/posts'
+     let username = this.$route.params.username
+
      axios.post(url, {
-       username: this.$route.params.username
+       username: username
      },	{
        withCredentials: true
      }).then(response => {
        this.posts = response.data.posts
-       console.log(response.data)
      }).catch(error => {
        alert(error)
      })

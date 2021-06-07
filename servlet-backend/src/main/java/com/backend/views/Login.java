@@ -20,8 +20,6 @@ import static com.backend.utils.inputStream2String.transform;
 public class Login extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("application/json; charset=utf-8");
         PrintWriter writer = response.getWriter();
 
         String jsonData = transform(request.getInputStream());
@@ -32,24 +30,26 @@ public class Login extends HttpServlet {
         String passhash = jsonObject.getString("passhash");
 
         Result<List<User>, Exception> queryResult = User.queryWithPasshash(username, usertype.equals("admin"), passhash);
+        JSONObject result = new JSONObject();
+
         if(queryResult.isOk()) {
             HttpSession session = request.getSession();
             session.setAttribute("curuser", username);
             session.setAttribute("usertype", usertype);
-            JSONObject result = new JSONObject();
+
             result.put("status", "login success");
             result.put("curuser", username);
-
-            writer.write(result.toString());
-
+            // STUB
+            result.put("username", username);
+            result.put("usertype", usertype);
         } else if(queryResult.isErr()){
             // TODO return 400
             response.setStatus(400);
-            JSONObject result = new JSONObject();
+
             result.put("status", "login failed");
             result.put("error", queryResult.right.getMessage());
-
-            writer.write(result.toString());
         }
+
+        writer.write(result.toString());
     }
 }
