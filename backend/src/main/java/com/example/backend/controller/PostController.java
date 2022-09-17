@@ -38,7 +38,7 @@ public class PostController {
     Integer pagesize;
 
     @PostMapping
-    public Result<Post> insertOne(@RequestBody @Valid PostRequest post, BindingResult result, HttpServletRequest request) {
+    public Result<PostShortcut> insertOne(@RequestBody @Valid PostRequest post, BindingResult result, HttpServletRequest request) {
         String username = jwtTokenUtil.getUsernameFromRequest(request);
         Optional<User> optionalUser = userService.findOne(username);
 
@@ -47,7 +47,9 @@ public class PostController {
             User user = optionalUser.get();
             Category category = optionalCategory.get();
             Post newpost = new Post(null, post.getTitle(), post.getBody(), null, user, category, new ArrayList<>());
-            return Result.Ok("insert ok", postService.insertOne(newpost));
+            newpost = postService.insertOne(newpost);
+            PostShortcut shortcut = PostShortcut.fromPost(newpost);
+            return Result.Ok("insert ok", shortcut);
         } else if(optionalUser.isEmpty()) {
             return Result.Err("no such user");
         } else { // optional category is empty
@@ -63,8 +65,10 @@ public class PostController {
     }
 
     @PutMapping
-    public Result<Post> updateOne(@RequestBody Post post) {
-        return Result.Ok("update ok", postService.updateOne(post));
+    public Result<PostShortcut> updateOne(@RequestBody Post post) {
+        Post newpost = postService.updateOne(post);
+        PostShortcut shortcut = PostShortcut.fromPost(newpost);
+        return Result.Ok("update ok", shortcut);
     }
 
     @GetMapping("/{id}")

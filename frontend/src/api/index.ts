@@ -159,7 +159,7 @@ async function updateCategory(category: Category) {
 
 async function deleteCategory(id: number) {
     let jwttoken = localStorage.getItem(LOCAL_TOKEN_KEY) || "no token";
-    let newcategory = await instance.delete(`/category/${id}`, {
+    await instance.delete(`/category/${id}`, {
         headers: {
             "Authorization": jwttoken
         }
