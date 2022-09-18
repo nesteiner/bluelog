@@ -27,7 +27,6 @@ class PostShortcutWidget extends StatelessWidget {
     );
 
     final sizedbox = SizedBox(
-      width: 600,
       height: 200,
       child: column,
     );
@@ -41,7 +40,7 @@ class PostShortcutWidget extends StatelessWidget {
       child: clip,
     );
 
-    return DecoratedBox(
+    return Container(
       decoration: BoxDecoration(
           border: Border.all(
               color: const Color.fromRGBO(0, 0, 0, 0.125),
@@ -51,6 +50,8 @@ class PostShortcutWidget extends StatelessWidget {
 
           borderRadius: const BorderRadius.all(Radius.circular(8.0))
       ),
+
+      margin: EdgeInsets.all(5.0),
       child: child,
     );
   }
@@ -73,29 +74,23 @@ class PostShortcutWidget extends StatelessWidget {
 
         Consumer(
             builder: (context, GlobalState state, child) {
-              return DropdownButton(
-                items: list.map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value)
-                  );
-                }).toList(),
+              return Column(
+                children: [
+                  TextButton(
+                    child: Text("Edit"),
+                    onPressed: () async {
+                      final post = await state.findPost(shortcut.postid);
+                      Navigator.of(context).push(MaterialPageRoute(builder: (_) => PostEditPage(post: post)));
+                    },
+                  ),
 
-                onChanged: (String? value) async {
-                  if(value! == "Edit") {
-                    final post = await state.findPost(shortcut.postid);
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => PostEditPage(post: post)
-                    ));
-                  } else if(value! == "Delete") {
-                    await state.deletePost(shortcut.postid);
-                  } else {
-                    // do nothing
-                  }
-
-                },
-
-                icon: const Icon(Icons.more_horiz),
+                  TextButton(
+                    child: Text("Delete"),
+                    onPressed: () async {
+                      await state.deletePost(shortcut.postid);
+                    },
+                  )
+                ],
               );
             }
         )
@@ -132,10 +127,10 @@ class Pagination extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        IconButton(onPressed: onPrev, icon: Icon(Icons.arrow_left_outlined)),
-        IconButton(onPressed: onNext, icon: Icon(Icons.arrow_right_outlined))
+        TextButton(onPressed: onPrev, child: Text("<Previous")),
+        TextButton(onPressed: onNext, child: Text("Next>"))
       ],
     );
   }

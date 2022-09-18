@@ -65,12 +65,7 @@ class PostView extends StatelessWidget {
   }
 }
 
-class PostManagePage extends StatefulWidget {
-  @override
-  PostManagePageState createState() => PostManagePageState();
-}
-
-class PostManagePageState extends State<PostManagePage>{
+class PostManagePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer(
@@ -164,14 +159,23 @@ class PostAddState extends State<PostAddPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        buildInputTitle(context),
-        buildSelect(context),
-        buildInputBody(context),
-        buildFooter(context)
-      ],
+    final consumer = Consumer(
+        builder: (context, GlobalState state, child) => Column(
+          children: [
+            buildInputTitle(context),
+            buildSelect(context, state),
+            buildInputBody(context),
+            buildFooter(context, state),
+          ],
+        )
     );
+
+    final padding = Padding(
+      padding: EdgeInsets.all(32),
+      child: consumer,
+    );
+
+    return padding;
   }
 
   Widget buildInputTitle(BuildContext context) {
@@ -185,18 +189,14 @@ class PostAddState extends State<PostAddPage> {
     );
   }
 
-  Widget buildSelect(BuildContext context) {
-    return Consumer(
-        builder: (context, GlobalState state, child) {
-          return DropdownButton<String>(
-              value: selected,
-              items: state.categories.map<DropdownMenuItem<String>>((x) => DropdownMenuItem(child: Text(x.name), value: x.name,)).toList(),
-              onChanged: (String? value) {
-                setState(() {
-                  selected = value!;
-                });
-              }
-          );
+  Widget buildSelect(BuildContext context, GlobalState state) {
+    return DropdownButton<String>(
+        value: selected,
+        items: state.categories.map<DropdownMenuItem<String>>((x) => DropdownMenuItem(child: Text(x.name), value: x.name,)).toList(),
+        onChanged: (String? value) {
+          setState(() {
+            selected = value!;
+          });
         }
     );
   }
@@ -212,29 +212,30 @@ class PostAddState extends State<PostAddPage> {
     );
   }
 
-  Widget buildFooter(BuildContext context) {
-    final consumer = Consumer(
-        builder: (context, GlobalState state, child) {
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              ElevatedButton(
-                child: const Text("cancel"),
-                onPressed: handleCancel,
-              ),
+  Widget buildFooter(BuildContext context, GlobalState state) {
+    final row = Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        OutlinedButton(
+          child: const Text("cancel"),
+          onPressed: handleCancel,
+        ),
 
-              ElevatedButton(
-                child: const Text("submit"),
-                onPressed: () async {
-                  await handleSubmit(state);
-                },
-              ),
-            ],
-          );
-        }
+        ElevatedButton(
+          child: const Text("submit"),
+          onPressed: () async {
+            await handleSubmit(state);
+          },
+        ),
+      ],
     );
 
-    return consumer;
+    final padding = Padding(
+      padding: EdgeInsets.symmetric(vertical: 32),
+      child: row,
+    );
+
+    return padding;
   }
 
   Future<void> handleSubmit(GlobalState state) async {
@@ -277,18 +278,26 @@ class PostEditPageState extends State<PostEditPage> {
 
   @override
   Widget build(BuildContext context) {
-    final column = Column(
-      children: [
-        buildInputTitle(context),
-        buildSelect(context),
-        buildInputBody(context),
-        buildFooter(context)
-      ],
+    final column = Consumer(
+      builder: (context, GlobalState state, child) => Column(
+        children: [
+          buildInputTitle(context),
+          buildSelect(context, state),
+          buildInputBody(context),
+          buildFooter(context, state)
+        ],
+      ),
     );
 
+    final padding = Padding(
+      padding: EdgeInsets.all(32),
+      child: column,
+    );
     return Scaffold(
       appBar: AppBar(title: Text("Editting ${widget.post.title}"),),
-      body: column,
+      body: SingleChildScrollView(
+        child: padding,
+      ),
     );
   }
 
@@ -303,56 +312,49 @@ class PostEditPageState extends State<PostEditPage> {
     );
   }
 
-  Widget buildSelect(BuildContext context) {
-    return Consumer(
-        builder: (context, GlobalState state, child) {
-          return DropdownButton<String>(
-              value: selected,
-              items: state.categories.map<DropdownMenuItem<String>>((x) => DropdownMenuItem(child: Text(x.name), value: x.name,)).toList(),
-              onChanged: (String? value) {
-                setState(() {
-                  selected = value!;
-                });
-              }
-          );
+  Widget buildSelect(BuildContext context, GlobalState state) {
+    return DropdownButton<String>(
+        value: selected,
+        items: state.categories.map<DropdownMenuItem<String>>((x) => DropdownMenuItem(child: Text(x.name), value: x.name,)).toList(),
+        onChanged: (String? value) {
+          setState(() {
+            selected = value!;
+          });
         }
     );
   }
 
   Widget buildInputBody(BuildContext context) {
-    return TextField(
-      controller: inputBody,
-      maxLines: 8,
-      decoration: const InputDecoration(
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 32),
+      child: TextField(
+        controller: inputBody,
+        maxLines: 8,
+        decoration: const InputDecoration(
           labelText: "输入正文",
           hintText: "从这里输入"
+        ),
       ),
     );
   }
 
-  Widget buildFooter(BuildContext context) {
-    final consumer = Consumer(
-        builder: (context, GlobalState state, child) {
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              ElevatedButton(
-                child: const Text("cancel"),
-                onPressed: () {handleCancel(context);},
-              ),
+  Widget buildFooter(BuildContext context, GlobalState state) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        ElevatedButton(
+          child: const Text("cancel"),
+          onPressed: () {handleCancel(context);},
+        ),
 
-              ElevatedButton(
-                child: const Text("submit"),
-                onPressed: () async {
-                  await handleSubmit(context, state);
-                },
-              ),
-            ],
-          );
-        }
+        ElevatedButton(
+          child: const Text("submit"),
+          onPressed: () async {
+            await handleSubmit(context, state);
+          },
+        ),
+      ],
     );
-
-    return consumer;
   }
 
   Future<void> handleSubmit(BuildContext context, GlobalState state) async {
@@ -386,8 +388,18 @@ class CategoryManagePage extends StatelessWidget {
     return Consumer(
         builder: (context, GlobalState state, child) {
           final categories = state.categories;
-          return Column(
-            children: categories.map<Widget>((category) => buildCategory(context, category, state)).toList(),
+          // return Column(
+          //   children: categories.map<Widget>((category) => buildCategory(context, category, state)).toList(),
+          // );
+          final list = ListView.separated(
+              itemCount: categories.length,
+              itemBuilder: (context, index) => buildCategory(context, categories[index], state),
+              separatorBuilder: (context, index) => Divider(color: Colors.grey),
+          );
+
+          return Padding(
+            padding: EdgeInsets.all(32),
+            child: list,
           );
         }
     );
@@ -458,19 +470,24 @@ class CategoryAddPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, GlobalState state, child) {
-        return Column(
+        final column = Column (
           children: [
-            TextField(controller: categoryName,),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 16),
+              child: TextField(controller: categoryName,),
+            ),
+
             Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(
+                OutlinedButton(
                   child: const Text("cancel"),
                   onPressed: () {
 
                   },
                 ),
 
-                TextButton(
+                ElevatedButton(
                   child: const Text("submit"),
                   onPressed: () async {
                     try {
@@ -486,11 +503,17 @@ class CategoryAddPage extends StatelessWidget {
             )
           ],
         );
+
+        final padding = Padding(
+          padding: EdgeInsets.all(32),
+          child: column,
+        );
+
+        return padding;
       },
     );
   }
 }
-
 class LoginPage extends StatelessWidget {
   TextEditingController usernameController = TextEditingController(text: "steiner");
   TextEditingController passwordController = TextEditingController(text: "password");
@@ -504,58 +527,81 @@ class LoginPage extends StatelessWidget {
   }
 
   Widget buildBody(BuildContext context) {
+    final headIcon = Container(
+      padding: EdgeInsets.all(60),
+      child: Icon(Icons.login, size: 100,),
+    );
+
+    final usernameInput = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+      child: TextField(
+        controller: usernameController,
+        decoration: InputDecoration(
+          border: OutlineInputBorder(),
+          labelText: "Username",
+          hintText: "Enter username"
+        ),
+      ),
+    );
+
+    final passwordInput = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+      child: TextField(
+        controller: passwordController,
+        obscureText: true,
+        decoration: InputDecoration(
+          border: OutlineInputBorder(),
+          labelText: "Password",
+          hintText: "Enter secure password"
+        ),
+      ),
+    );
+
+    final loginButton = Container(
+        height: 50,
+        width: 250,
+        decoration: BoxDecoration(
+          color: Colors.blue,
+          borderRadius: BorderRadius.circular(20),
+        ),
+
+        child: Consumer(
+          builder: (context, GlobalState state, child) {
+            return ElevatedButton(
+              child: const Text("Login", style: TextStyle(color: Colors.white, fontSize: 25),),
+              onPressed: () async {
+                try {
+                  final token = await login(
+                      username: usernameController.text,
+                      password: passwordController.text);
+                  await state.setToken(token);
+
+                  // Navigator.of(context).pushNamed("home");
+                  Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (_) => DefaultTabController(length: 4, child: HomePage())));
+                } on DioError catch (error) {
+                  handleDioError(context, error);
+                } finally {
+                  usernameController.text = "";
+                  passwordController.text = "";
+                }
+              },
+
+            );
+          },
+        )
+    );
+
     final column = Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        TextField(
-          controller: usernameController,
-          decoration: const InputDecoration(
-              labelText: "用户名",
-              hintText: "用户名",
-              prefixIcon: Icon(Icons.person)
-          ),
-        ),
-
-        TextField(
-          controller: passwordController,
-          decoration: const InputDecoration(
-              labelText: "密码",
-              hintText: "密码",
-              prefixIcon: Icon(Icons.lock)
-          ),
-        ),
-
-        Consumer(builder: (context, GlobalState state, child) {
-          return ElevatedButton(
-            child: const Text("Login"),
-            onPressed: () async {
-              try {
-                final token = await login(username: usernameController.text,
-                    password: passwordController.text);
-                await state.setToken(token);
-
-                // Navigator.of(context).pushNamed("home");
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => DefaultTabController(length: 4, child: HomePage())));
-              } on DioError catch (error) {
-                handleDioError(context, error);
-              } finally {
-                usernameController.text = "";
-                passwordController.text = "";
-              }
-            },
-          );
-        })
-
+        headIcon,
+        usernameInput,
+        passwordInput,
+        loginButton,
       ],
     );
 
-    final padding = Padding(
-      padding: const EdgeInsets.all(24),
-      child: column,
-    );
-
-    return padding;
+    return column;
   }
 }
 
@@ -573,6 +619,14 @@ class HomePage extends StatelessWidget {
             Tab(text: "CategoryAdd",)
           ],
         ),
+        actions: [
+          TextButton(
+            child: Text("Logout", style: TextStyle(color: Colors.white),),
+            onPressed: () {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => LoginPage()));
+            },
+          )
+        ],
       ),
       body: TabBarView(
         children: [

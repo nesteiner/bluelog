@@ -10,15 +10,19 @@ void main() => runApp(App());
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return ChangeNotifierProvider(
       create: (_) => GlobalState(),
       child: MaterialApp(
         title: "App",
         home: LoginPage(),
+        debugShowCheckedModeBanner: false,
       )
     );
 
+    // return MaterialApp(
+    //   title: "App",
+    //   home: TestPage(),
+    // );
   }
 }
 
@@ -46,13 +50,24 @@ class TestPage extends StatelessWidget {
       )
   );
 
+  final row = Row(
+    children: [
+      SizedBox(
+        width: 200,
+        child: TextField(),
+      ),
+
+      DropdownButton<String>(items: [], onChanged: (String? value) {})
+    ],
+  );
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(title: Text("Test Page"),),
       body: Center(
-        child: postshortcutWidget
+        child: row
       )
     );
   }
