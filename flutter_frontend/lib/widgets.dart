@@ -67,8 +67,13 @@ class PostShortcutWidget extends StatelessWidget {
               return TextButton(
                 child: Text(shortcut.title, style: Theme.of(context).textTheme.headline3,),
                 onPressed: () async {
-                  final post = await state.findPost(shortcut.postid);
-                  Navigator.of(context).push(MaterialPageRoute(builder: (_) => PostView(post: post)));
+                  try {
+                    final post = await state.findPost(shortcut.postid);
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => PostView(post: post)));
+                  } on DioError catch(error) {
+                    handleDioError(context, error);
+                  }
                 },
               );
             },

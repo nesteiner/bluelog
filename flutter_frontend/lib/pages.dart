@@ -18,7 +18,8 @@ class PostView extends StatelessWidget {
       children: [
         buildTitle(context),
         buildDetail(context),
-        buildBody(context)
+        buildBody(context),
+        buildComments(context),
       ],
     );
 
@@ -62,6 +63,40 @@ class PostView extends StatelessWidget {
 
   Widget buildBody(BuildContext context) {
     return Html(data: post.body);
+  }
+
+  Widget buildComments(BuildContext context) {
+    return Column(
+      children: post.comments.map<Widget>((comment) => buildComment(context, comment)).toList()
+    );
+  }
+
+  Widget buildComment(BuildContext context, Comment comment) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: const Color.fromRGBO(0, 0, 0, 0.125), width: 1),
+      ),
+
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(comment.user.name, style: const TextStyle(color: Colors.blue),),
+              Text(comment.timestamp, style: const TextStyle(color: Colors.grey),)
+            ],
+          ),
+
+          Wrap(
+            children: [
+              Text(comment.body)
+            ],
+          )
+        ],
+      ),
+    );
   }
 }
 
@@ -126,7 +161,7 @@ class PostManagePage extends StatelessWidget {
   Widget buildCategories(BuildContext context, GlobalState state) {
     List<Widget> children = [
       TextButton(
-        child: Text("all", style: TextStyle(color: Colors.red),),
+        child: const Text("all", style: TextStyle(color: Colors.red),),
         onPressed: () async {
           await state.findData();
           state.notifyListeners();
@@ -186,7 +221,7 @@ class PostAddState extends State<PostAddPage> {
   Widget buildSelect(BuildContext context, GlobalState state) {
     return DropdownButton<String>(
         value: selected,
-        items: state.categories.map<DropdownMenuItem<String>>((x) => DropdownMenuItem(child: Text(x.name), value: x.name,)).toList(),
+        items: state.categories.map<DropdownMenuItem<String>>((x) => DropdownMenuItem(value: x.name, child: Text(x.name), )).toList(),
         onChanged: (String? value) {
           setState(() {
             selected = value!;
@@ -211,8 +246,8 @@ class PostAddState extends State<PostAddPage> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         OutlinedButton(
-          child: const Text("cancel"),
           onPressed: handleCancel,
+          child: const Text("cancel"),
         ),
 
         ElevatedButton(
@@ -225,7 +260,7 @@ class PostAddState extends State<PostAddPage> {
     );
 
     final padding = Padding(
-      padding: EdgeInsets.symmetric(vertical: 32),
+      padding: const EdgeInsets.symmetric(vertical: 32),
       child: row,
     );
 
@@ -251,7 +286,7 @@ class PostAddState extends State<PostAddPage> {
 }
 
 class PostEditPage extends StatefulWidget {
-  Post post;
+  final Post post;
   PostEditPage({required this.post});
 
   @override
@@ -284,7 +319,7 @@ class PostEditPageState extends State<PostEditPage> {
     );
 
     final padding = Padding(
-      padding: EdgeInsets.all(32),
+      padding: const EdgeInsets.all(32),
       child: column,
     );
 
@@ -310,7 +345,7 @@ class PostEditPageState extends State<PostEditPage> {
   Widget buildSelect(BuildContext context, GlobalState state) {
     return DropdownButton<String>(
         value: selected,
-        items: state.categories.map<DropdownMenuItem<String>>((x) => DropdownMenuItem(child: Text(x.name), value: x.name,)).toList(),
+        items: state.categories.map<DropdownMenuItem<String>>((x) => DropdownMenuItem(value: x.name, child: Text(x.name))).toList(),
         onChanged: (String? value) {
           setState(() {
             selected = value!;
@@ -349,7 +384,7 @@ class PostEditPageState extends State<PostEditPage> {
     );
 
     final padding = Padding(
-      padding: EdgeInsets.symmetric(vertical: 32),
+      padding: const EdgeInsets.symmetric(vertical: 32),
       child: row,
     );
 
@@ -393,7 +428,7 @@ class CategoryManagePage extends StatelessWidget {
           final list = ListView.separated(
               itemCount: categories.length,
               itemBuilder: (context, index) => buildCategory(context, categories[index], state),
-              separatorBuilder: (context, index) => Divider(color: Colors.grey),
+              separatorBuilder: (context, index) => const Divider(color: Colors.grey),
           );
 
           return list;
@@ -469,7 +504,7 @@ class CategoryAddPage extends StatelessWidget {
         return Column (
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 16),
+              padding: const EdgeInsets.symmetric(vertical: 16),
               child: TextField(controller: categoryName,),
             ),
 
@@ -518,15 +553,15 @@ class LoginPage extends StatelessWidget {
 
   Widget buildBody(BuildContext context) {
     final headIcon = Container(
-      padding: EdgeInsets.all(60),
-      child: Icon(Icons.login, size: 100,),
+      padding: const EdgeInsets.all(60),
+      child: const Icon(Icons.login, size: 100,),
     );
 
     final usernameInput = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
       child: TextField(
         controller: usernameController,
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
           border: OutlineInputBorder(),
           labelText: "Username",
           hintText: "Enter username"
@@ -539,7 +574,7 @@ class LoginPage extends StatelessWidget {
       child: TextField(
         controller: passwordController,
         obscureText: true,
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
           border: OutlineInputBorder(),
           labelText: "Password",
           hintText: "Enter secure password"
@@ -611,7 +646,7 @@ class HomePage extends StatelessWidget {
         ),
         actions: [
           TextButton(
-            child: Text("Logout", style: TextStyle(color: Colors.white),),
+            child: const Text("Logout", style: TextStyle(color: Colors.white),),
             onPressed: () {
               Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => LoginPage()));
             },
@@ -619,7 +654,7 @@ class HomePage extends StatelessWidget {
         ],
       ),
       body: Padding(
-        padding: EdgeInsets.all(32),
+        padding: const EdgeInsets.all(32),
         child: TabBarView(
           children: [
             PostManagePage(),

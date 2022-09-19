@@ -15,6 +15,7 @@ class GlobalState extends ChangeNotifier {
     categories = await api.findCategories(token);
     totalPage = pagePostShortcut.totalPage;
     shortcuts = pagePostShortcut.shortcuts;
+    notifyListeners();
   }
 
   Future<void> findDataByCategory(Category category) async {
@@ -22,6 +23,7 @@ class GlobalState extends ChangeNotifier {
     categories = await api.findCategories(token);
     totalPage = pagePostShortcut.totalPage;
     shortcuts = pagePostShortcut.shortcuts;
+    notifyListeners();
   }
 
   Future<void> setToken(String token) async {
@@ -43,7 +45,6 @@ class GlobalState extends ChangeNotifier {
     if(index != -1) {
       shortcuts.removeAt(index);
       await findData();
-      notifyListeners();
     }
   }
 
@@ -66,13 +67,11 @@ class GlobalState extends ChangeNotifier {
   Future<void> setCategory(Category category) async {
     currentIndex = 0;
     await findDataByCategory(category);
-    notifyListeners();
   }
 
   Future<void> setPageIndex(int pageindex) async {
     currentIndex = pageindex;
     await findData();
-    notifyListeners();
   }
 
   Future<void> deleteCategory(Category category) async {
@@ -87,7 +86,6 @@ class GlobalState extends ChangeNotifier {
     if(index != -1) {
       categories[index] = newcategory;
       await findData();
-      notifyListeners();
     }
 
     return newcategory;
