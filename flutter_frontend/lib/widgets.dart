@@ -1,4 +1,6 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_frontend/api.dart';
 import 'package:flutter_frontend/models.dart';
 import 'package:flutter_frontend/pages.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -79,8 +81,14 @@ class PostShortcutWidget extends StatelessWidget {
                   TextButton(
                     child: Text("Edit"),
                     onPressed: () async {
-                      final post = await state.findPost(shortcut.postid);
-                      Navigator.of(context).push(MaterialPageRoute(builder: (_) => PostEditPage(post: post)));
+                      try {
+                        final post = await state.findPost(shortcut.postid);
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (_) =>
+                                PostEditPage(post: post)));
+                      } on DioError catch(error) {
+                        handleDioError(context, error);
+                      }
                     },
                   ),
 

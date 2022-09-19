@@ -159,7 +159,7 @@ class PostAddState extends State<PostAddPage> {
 
   @override
   Widget build(BuildContext context) {
-    final consumer = Consumer(
+    return Consumer(
         builder: (context, GlobalState state, child) => Column(
           children: [
             buildInputTitle(context),
@@ -170,12 +170,6 @@ class PostAddState extends State<PostAddPage> {
         )
     );
 
-    final padding = Padding(
-      padding: EdgeInsets.all(32),
-      child: consumer,
-    );
-
-    return padding;
   }
 
   Widget buildInputTitle(BuildContext context) {
@@ -293,6 +287,7 @@ class PostEditPageState extends State<PostEditPage> {
       padding: EdgeInsets.all(32),
       child: column,
     );
+
     return Scaffold(
       appBar: AppBar(title: Text("Editting ${widget.post.title}"),),
       body: SingleChildScrollView(
@@ -325,24 +320,21 @@ class PostEditPageState extends State<PostEditPage> {
   }
 
   Widget buildInputBody(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 32),
-      child: TextField(
+    return TextField(
         controller: inputBody,
         maxLines: 8,
         decoration: const InputDecoration(
           labelText: "输入正文",
           hintText: "从这里输入"
         ),
-      ),
     );
   }
 
   Widget buildFooter(BuildContext context, GlobalState state) {
-    return Row(
+    final row = Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        ElevatedButton(
+        OutlinedButton(
           child: const Text("cancel"),
           onPressed: () {handleCancel(context);},
         ),
@@ -355,6 +347,13 @@ class PostEditPageState extends State<PostEditPage> {
         ),
       ],
     );
+
+    final padding = Padding(
+      padding: EdgeInsets.symmetric(vertical: 32),
+      child: row,
+    );
+
+    return padding;
   }
 
   Future<void> handleSubmit(BuildContext context, GlobalState state) async {
@@ -397,10 +396,7 @@ class CategoryManagePage extends StatelessWidget {
               separatorBuilder: (context, index) => Divider(color: Colors.grey),
           );
 
-          return Padding(
-            padding: EdgeInsets.all(32),
-            child: list,
-          );
+          return list;
         }
     );
   }
@@ -470,7 +466,7 @@ class CategoryAddPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, GlobalState state, child) {
-        final column = Column (
+        return Column (
           children: [
             Padding(
               padding: EdgeInsets.symmetric(vertical: 16),
@@ -504,12 +500,6 @@ class CategoryAddPage extends StatelessWidget {
           ],
         );
 
-        final padding = Padding(
-          padding: EdgeInsets.all(32),
-          child: column,
-        );
-
-        return padding;
       },
     );
   }
@@ -628,14 +618,17 @@ class HomePage extends StatelessWidget {
           )
         ],
       ),
-      body: TabBarView(
-        children: [
-          PostManagePage(),
-          PostAddPage(),
-          CategoryManagePage(),
-          CategoryAddPage()
-        ],
-      ),
+      body: Padding(
+        padding: EdgeInsets.all(32),
+        child: TabBarView(
+          children: [
+            PostManagePage(),
+            PostAddPage(),
+            CategoryManagePage(),
+            CategoryAddPage()
+          ],
+        ),
+      )
     );
   }
 }
