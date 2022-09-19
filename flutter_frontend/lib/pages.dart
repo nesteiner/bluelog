@@ -108,30 +108,30 @@ class PostManagePage extends StatelessWidget {
           final column = Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              buildPostShortcuts(context, state),
+              Expanded(child: buildPostShortcuts(context, state)),
               buildPagination(context, state),
             ],
           );
 
-          final scroll = SingleChildScrollView(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(child: column),
-                buildCategories(context, state)
-              ],
-            ),
+
+          final row = Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(child: column),
+              buildCategories(context, state)
+            ],
           );
 
-          return scroll;
+          return row;
         }
     );
   }
 
   Widget buildPostShortcuts(BuildContext context, GlobalState state) {
-    return Column(
-      children: state.shortcuts.map<PostShortcutWidget>((shortcut) => PostShortcutWidget(shortcut: shortcut)).toList(),
+    return ListView.builder(
+        itemCount: state.shortcuts.length,
+        itemBuilder: (context, index) => PostShortcutWidget(shortcut: state.shortcuts[index])
     );
   }
 
