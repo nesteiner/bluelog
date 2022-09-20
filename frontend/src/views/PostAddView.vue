@@ -1,6 +1,5 @@
 <template>
   <div class="add-post">
-    <Navigation/>
     <div>
       标题
       <input type="text" v-model="title">
@@ -23,10 +22,9 @@
 </template>
 
 <script lang="ts" setup>
-import {inject, onMounted, Ref, ref} from "vue";
+import {onMounted, ref} from "vue";
 import {findCategories, insertPost} from "@/api";
 import {useRouter} from "vue-router";
-import Navigation from "@/components/Navigation.vue";
 
 const router = useRouter();
 const title = ref("")

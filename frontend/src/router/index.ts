@@ -28,21 +28,6 @@ const routes: Array<RouteRecordRaw> = [
   },
 
   {
-    path: "/category-manage",
-    name: "category-manage",
-    component: () => import("@/views/CategoryManageView.vue")
-  },
-  {
-    path: "/post-add",
-    name: "post-add",
-    component: () => import("@/views/PostAddView.vue")
-  },
-  {
-    path: "/category-add",
-    name: "add-category",
-    component: () => import("@/views/CategoryAddView.vue")
-  },
-  {
     path: "/post-edit/:id/",
     name: "post-edit",
     component: () => import("@/views/PostEditView.vue")

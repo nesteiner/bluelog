@@ -1,10 +1,7 @@
 <template>
   <nav>
     <div>
-      <router-link to="/home">Home</router-link> |
-      <router-link to="/category-manage">Category Manage</router-link> |
-      <router-link to="/post-add">Post Add</router-link> |
-      <router-link to="/category-add">Category Add</router-link>
+      <router-link to="/home">Home</router-link>
     </div>
 
     <button @click="handleLogout">Logout</button>

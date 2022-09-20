@@ -1,7 +1,5 @@
 <template>
   <div class="add-category">
-    <Navigation/>
-
     <div class="form">
       <input type="text" v-model="text"/>
 
@@ -15,7 +13,6 @@
 </template>
 
 <script lang="ts" setup>
-import Navigation from "@/components/Navigation.vue";
 import {ref} from "vue";
 import {useRouter} from "vue-router";
 import {insertCategory} from "@/api";

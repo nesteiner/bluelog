@@ -8,7 +8,7 @@
       </li>
 
       <template v-for="(item, index) in pages" :key="index">
-        <li class="page" :class="{actived: item == currentPage}" @click="select(item)">
+        <li class="page" :class="{actived: item === currentPage}" @click="select(item)">
           <span> {{item}} </span>
         </li>
       </template>
@@ -106,7 +106,6 @@ div.page-container {
 
     li {
       width: 30px;
-      height: 30px;
       background: white;
       display: flex;
       justify-content: center;

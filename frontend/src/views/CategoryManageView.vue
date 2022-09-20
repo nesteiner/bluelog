@@ -1,7 +1,5 @@
 <template>
   <div class="category-manage">
-    <Navigation/>
-
     <ul class="categories">
       <template v-for="(category, index) in categories" :key="index">
         <li>
@@ -27,9 +25,8 @@
 </template>
 
 <script lang="ts" setup>
-import Navigation from "@/components/Navigation.vue";
 import {onMounted, ref} from "vue";
-import {deleteCategory, findCategories, insertCategory, updateCategory} from "@/api";
+import {deleteCategory, findCategories, updateCategory} from "@/api";
 import {useRouter} from "vue-router";
 import Dialog from "@/components/Dialog.vue";
 

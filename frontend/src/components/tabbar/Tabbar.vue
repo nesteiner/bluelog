@@ -4,7 +4,7 @@
       <template v-for="(name, index) in names" :key="index">
         <div
           @click="clickItem(name)"
-          :class="{active: activeName == name}">
+          :class="{active: activeName === name}">
           {{name}}
         </div>
       </template>
@@ -57,7 +57,7 @@
 
      div {
        display: block;
-       width: 100px;
+       min-width: 100px;
        cursor: pointer;
        border: 1px solid #dcdfe6;
 

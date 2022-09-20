@@ -1,12 +1,14 @@
 <template>
   <div class="post">
+    <Navigation/>
     <div class="header">
       <h1>{{post.title}}</h1>
 
-      <small>
-        <p>{{post.author.name}}</p>
-        <p>{{post.author.email}}</p>
-      </small>
+      <p>
+        <small>{{post.author.name}}</small>
+        <br/>
+        <small>{{post.author.email}}</small>
+      </p>
     </div>
 
     <div class="body" v-html="post.body"/>
@@ -24,6 +26,7 @@ import {useRoute, useRouter} from "vue-router";
 import {onMounted, ref} from "vue";
 import {findPost} from "@/api";
 import Comment from "@/components/Comment.vue"
+import Navigation from "@/components/Navigation.vue";
 const route = useRoute();
 const router = useRouter();
 
