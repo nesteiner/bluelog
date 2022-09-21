@@ -54,10 +54,22 @@ class BackendApplicationTests {
                 new Comment(null, user, "comment6", null)
         );
 
-
-        Post post1 = new Post(null, "post1", new String("<h1> Hello World </h1>").repeat(40), null, user, category1, comments1);
-        Post post2 = new Post(null, "post2", new String("<h1> Fuck You </h1>").repeat(40), null, user, category2, comments2);
-        postRepository.save(post1);
-        postRepository.save(post2);
+        List<Post> posts = List.of(
+            new Post(null, "post1", new String("<h1> Hello World </h1>").repeat(40), null, user, category1, comments1),
+            new Post(null, "post2", new String("<h1> Fuck You </h1>").repeat(40), null, user, category2, comments2),
+            new Post(null, "post3", new String("<h1> Fuck You </h1>").repeat(40), null, user, category2, new ArrayList<>()),
+            new Post(null, "post4", new String("<h1> Fuck You </h1>").repeat(40), null, user, category2, new ArrayList<>()),
+            new Post(null, "post5", new String("<h1> Fuck You </h1>").repeat(40), null, user, category2, new ArrayList<>()),
+            new Post(null, "post6", new String("<h1> Fuck You </h1>").repeat(40), null, user, category2, new ArrayList<>()),
+            new Post(null, "post7", new String("<h1> Fuck You </h1>").repeat(40), null, user, category2, new ArrayList<>()),
+            new Post(null, "post8", new String("<h1> Fuck You </h1>").repeat(40), null, user, category2, new ArrayList<>()),
+            new Post(null, "post9", new String("<h1> Fuck You </h1>").repeat(40), null, user, category2, new ArrayList<>()),
+            new Post(null, "post10", new String("<h1> Fuck You </h1>").repeat(40), null, user, category2, new ArrayList<>()),
+            new Post(null, "post11", new String("<h1> Fuck You </h1>").repeat(40), null, user, category2, new ArrayList<>()),
+            new Post(null, "post12", new String("<h1> Fuck You </h1>").repeat(40), null, user, category2, new ArrayList<>()),
+            new Post(null, "post13", new String("<h1> Fuck You </h1>").repeat(40), null, user, category2, new ArrayList<>()),
+            new Post(null, "post14", new String("<h1> Fuck You </h1>").repeat(40), null, user, category2, new ArrayList<>())
+        );
+        postRepository.saveAll(posts);
     }
 }

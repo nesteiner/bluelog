@@ -62,7 +62,7 @@ function handleDelete() {
 div.post-shortcut {
   display: flex;
   flex-direction: column;
-  align-items: start;
+  align-items: flex-start;
   border: 1px solid rgba(0, 0, 0, 0.125);
   padding: 10px;
 
