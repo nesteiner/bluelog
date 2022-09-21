@@ -1,0 +1,102 @@
+* Bluelog
+** To Run Backend
+1. run BackendApplicationTest fakeData first
+2. run BackendAplication main
+** Vue 前端
+*** 登录页
+
+#+DOWNLOADED: screenshot @ 2022-09-21 08:37:05
+[[file:images/Bluelog/2022-09-21_08-37-05_screenshot.png]]
+
+这里我们使用 fakeData 中的用户名 =steiner= ，密码 =password= 登录进去
+*** 主页
+
+#+DOWNLOADED: screenshot @ 2022-09-21 08:41:15
+[[file:images/Bluelog/2022-09-21_08-41-15_screenshot.png]]
+
+
+#+DOWNLOADED: screenshot @ 2022-09-21 08:42:06
+[[file:images/Bluelog/2022-09-21_08-42-06_screenshot.png]]
+
+#+DOWNLOADED: screenshot @ 2022-09-21 08:42:22
+[[file:images/Bluelog/2022-09-21_08-42-22_screenshot.png]]
+
+#+DOWNLOADED: screenshot @ 2022-09-21 08:42:41
+[[file:images/Bluelog/2022-09-21_08-42-41_screenshot.png]]
+
+** Flutter 前端
+*** 登录页
+
+#+DOWNLOADED: screenshot @ 2022-09-21 08:50:50
+[[file:images/Bluelog/2022-09-21_08-50-50_screenshot.png]]
+
+*** 主页
+
+#+DOWNLOADED: screenshot @ 2022-09-21 08:51:27
+[[file:images/Bluelog/2022-09-21_08-51-27_screenshot.png]]
+
+#+DOWNLOADED: screenshot @ 2022-09-21 08:51:49
+[[file:images/Bluelog/2022-09-21_08-51-49_screenshot.png]]
+
+#+DOWNLOADED: screenshot @ 2022-09-21 08:52:06
+[[file:images/Bluelog/2022-09-21_08-52-06_screenshot.png]]
+
+#+DOWNLOADED: screenshot @ 2022-09-21 08:52:25
+[[file:images/Bluelog/2022-09-21_08-52-25_screenshot.png]]
+
+** Nginx 设置
+后端应用放在 nginx 后面，他的设置是
+#+begin_src conf
+  user steiner;
+  worker_processes  1;
+
+  events {
+      worker_connections  1024;
+  }
+
+
+  http {
+      include       mime.types;
+
+      default_type application/json;
+
+      sendfile        on;
+
+      keepalive_timeout  65;
+
+      server {
+          listen       80;
+          server_name  localhost;
+
+          location / {
+              root /home/steiner/workspace/sayhello/frontend/dist;
+              index index.html;
+              try_files $uri $uri/ /index.html;
+          }
+
+          location /api {
+              proxy_pass http://localhost:8082/api;
+              add_header Access-Control-Allow-Origin * always;
+              add_header Access-Control-Allow-Methods * always;
+              add_header Access-Control-Allow-Headers * always;
+
+              if ($request_method = 'OPTIONS') {
+                 add_header Access-Control-Allow-Origin * always;
+                 add_header Access-Control-Allow-Methods * always;
+                 add_header Access-Control-Allow-Headers * always;
+                 return 204;     
+              }
+          }
+
+
+          error_page   500 502 503 504  /50x.html;
+          location = /50x.html {
+              root   /usr/share/nginx/html;
+          }
+
+
+      }
+
+  }
+
+#+end_src

@@ -45,11 +45,14 @@ async function handleSubmit() {
 
   try {
     await insertPost(request);
-    router.replace({name: "home"})
+    title.value = "";
+    body.value = "";
+    category.value = "default";
+    alert("insert post ok");
   } catch (error: any) {
     alert(error);
     if(error.status == 401) {
-      router.replace({name: "home"});
+      router.replace({name: "login"});
     }
   }
 

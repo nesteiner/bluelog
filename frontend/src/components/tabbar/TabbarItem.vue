@@ -1,5 +1,5 @@
 <template>
-  <div class="tabbar-item" v-show="name == activeName">
+  <div class="tabbar-item" v-if="name === activeName">
     <slot/>
   </div>
 </template>
