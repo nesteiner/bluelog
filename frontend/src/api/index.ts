@@ -1,4 +1,5 @@
 import Axios from "axios";
+import {Md5} from "ts-md5";
 
 const instance = Axios.create({
     baseURL: "http://localhost/api"
@@ -7,6 +8,7 @@ const instance = Axios.create({
 const LOCAL_TOKEN_KEY = "token";
 
 async function login(username: string, password: string) {
+    password = Md5.hashStr(password);
     let jwttoken = await instance.post("/authenticate", {
         username,
         password

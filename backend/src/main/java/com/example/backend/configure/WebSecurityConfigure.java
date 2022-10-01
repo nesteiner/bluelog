@@ -1,5 +1,6 @@
 package com.example.backend.configure;
 
+import com.example.backend.encoder.MD5PasswordEncoder;
 import com.example.backend.filter.AuthenticationFilter;
 import com.example.backend.filter.LoginFilter;
 import com.example.backend.service.UserService;
@@ -31,17 +32,16 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
     LoginFilter loginFilter;
     @Autowired
     AuthenticationFilter authenticateFilter;
+    @Autowired
+    MD5PasswordEncoder md5PasswordEncoder;
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-        authenticationManagerBuilder.userDetailsService(userService).passwordEncoder(passwordEncoder());
+        authenticationManagerBuilder.userDetailsService(userService).passwordEncoder(md5PasswordEncoder);
     }
     @Value("${open-url}")
     String openUrl;
 
-    private PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     @Bean
     @Override
